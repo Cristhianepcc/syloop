@@ -53,7 +53,7 @@ export function Sidebar({ role }: { role: Role }) {
 
   const nav = role === 'madre' ? motherNav : lawyerNav;
   const recentDocs = documents.slice(0, 2);
-  const recentCases = activeCases.slice(0, 2);
+  const clientRoster = activeCases.slice(0, 4);
 
   const isActive = (to: string) => (to === '/abogado' ? location.pathname === '/abogado' : location.pathname.startsWith(to));
 
@@ -113,7 +113,12 @@ export function Sidebar({ role }: { role: Role }) {
           </SidebarSection>
           <SidebarSection title="Recientes">
             {recentDocs.map((d) => (
-              <SidebarLink key={d.id} to="/madre/expediente" icon={<FileText className="h-4 w-4" />} label={d.name} />
+              <SidebarLink
+                key={d.id}
+                to={`/madre/expediente?doc=${d.id}`}
+                icon={<FileText className="h-4 w-4" />}
+                label={d.name}
+              />
             ))}
           </SidebarSection>
           <SidebarSection title="Mis expedientes">
@@ -125,14 +130,9 @@ export function Sidebar({ role }: { role: Role }) {
           <SidebarSection title="Apps">
             <SidebarLink to="/directorio" icon={<Users className="h-4 w-4" />} label="Mi perfil público" />
           </SidebarSection>
-          <SidebarSection title="Recientes">
-            {recentCases.map((c) => (
-              <SidebarLink key={c.id} to="/abogado" icon={<FileText className="h-4 w-4" />} label={c.clientName} />
-            ))}
-          </SidebarSection>
           <SidebarSection title="Clientas">
-            {recentCases.map((c) => (
-              <SidebarLink key={`client-${c.id}`} to="/abogado" icon={<Users className="h-4 w-4" />} label={c.clientName} />
+            {clientRoster.map((c) => (
+              <SidebarLink key={c.id} to="/abogado" icon={<Users className="h-4 w-4" />} label={c.clientName} />
             ))}
           </SidebarSection>
         </>
