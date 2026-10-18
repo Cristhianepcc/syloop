@@ -20,7 +20,7 @@ export default function App() {
     <HashRouter>
       <Routes>
         <Route path="/" element={<PublicLayout><Landing /></PublicLayout>} />
-        <Route path="/ingresar" element={<PublicLayout><Login /></PublicLayout>} />
+        <Route path="/ingresar" element={<Login />} />
         <Route path="/directorio" element={<PublicLayout><Directorio /></PublicLayout>} />
         <Route path="/abogados" element={<Navigate to="/directorio" replace />} />
 

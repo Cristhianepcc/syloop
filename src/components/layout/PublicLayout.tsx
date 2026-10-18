@@ -102,17 +102,15 @@ export function PublicLayout({ children }: { children: ReactNode }) {
 
       <Footer />
 
-      {location.pathname !== '/ingresar' && (
-        <Link
-          to="/madre/asistente"
-          className={`fixed right-5 z-20 flex min-h-[44px] items-center gap-2 rounded-full bg-ink px-4 text-sm font-semibold text-white shadow-lg hover:bg-[#15202E] ${
-            location.pathname === '/directorio' ? 'bottom-24' : 'bottom-5'
-          }`}
-        >
-          <MessageCircleQuestion className="h-4 w-4" />
-          ¿Dudas? Pregúntame
-        </Link>
-      )}
+      <Link
+        to="/madre/asistente"
+        className={`fixed right-5 z-20 flex min-h-[44px] items-center gap-2 rounded-full bg-ink px-4 text-sm font-semibold text-white shadow-lg hover:bg-[#15202E] ${
+          location.pathname === '/directorio' ? 'bottom-24' : 'bottom-5'
+        }`}
+      >
+        <MessageCircleQuestion className="h-4 w-4" />
+        ¿Dudas? Pregúntame
+      </Link>
     </div>
   );
 }

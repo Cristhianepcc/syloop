@@ -1,10 +1,16 @@
 import { FormEvent, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Check } from 'lucide-react';
 import { Logo } from '../../components/ui/Logo';
 import { Button } from '../../components/ui/Button';
+import { DemoBanner } from '../../components/layout/DemoBanner';
 import { useAppStore } from '../../store/useAppStore';
 import type { Role } from '../../types';
+
+const demoCredentials: Record<'madre' | 'abogado', { email: string; password: string }> = {
+  madre: { email: 'maria.torres@ejemplo.com', password: 'Syloop2026' },
+  abogado: { email: 'carmen.valdivia@ejemplo.com', password: 'Syloop2026' },
+};
 
 const benefits: Record<'madre' | 'abogado', string[]> = {
   madre: [
@@ -26,8 +32,8 @@ export function Login() {
   const [selectedRole, setSelectedRole] = useState<'madre' | 'abogado'>('madre');
   const [mode, setMode] = useState<'ingresar' | 'crear'>('ingresar');
   const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState(demoCredentials.madre.email);
+  const [password, setPassword] = useState(demoCredentials.madre.password);
   const [caaNumber, setCaaNumber] = useState('');
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -58,6 +64,29 @@ export function Login() {
     navigate(selectedRole === 'madre' ? '/madre/panel' : '/abogado');
   }
 
+  function handleRoleChange(role: 'madre' | 'abogado') {
+    setSelectedRole(role);
+    if (mode === 'ingresar') {
+      setEmail(demoCredentials[role].email);
+      setPassword(demoCredentials[role].password);
+    }
+  }
+
+  function handleModeChange(nextMode: 'ingresar' | 'crear') {
+    setMode(nextMode);
+    setError('');
+    if (nextMode === 'ingresar') {
+      setEmail(demoCredentials[selectedRole].email);
+      setPassword(demoCredentials[selectedRole].password);
+    } else {
+      setName('');
+      setEmail('');
+      setPassword('');
+      setCaaNumber('');
+      setAcceptedTerms(false);
+    }
+  }
+
   function handleGoogle() {
     setGoogleLoading(true);
     setTimeout(() => {
@@ -69,38 +98,43 @@ export function Login() {
   }
 
   return (
-    <div className="grid min-h-[calc(100vh-108px)] lg:grid-cols-2">
-      <div className="hidden flex-col justify-between bg-ink p-10 lg:flex">
-        <Logo variant="light" />
-        <div>
-          <p className="font-serif text-3xl font-medium leading-tight text-white">
-            Devolvemos el tiempo <span className="text-sky">a la justicia</span>
-          </p>
-          <ul className="mt-8 flex flex-col gap-4">
-            {benefits[selectedRole].map((b) => (
-              <li key={b} className="flex items-start gap-3 text-[15px] text-[#CBD5E1]">
-                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-sky/20 text-sky">
-                  <Check className="h-3.5 w-3.5" />
-                </span>
-                {b}
-              </li>
-            ))}
-          </ul>
-        </div>
-        <p className="text-xs text-[#475569]">Demo con datos ficticios · no ingreses información real</p>
-      </div>
-
-      <div className="flex items-center justify-center p-6 sm:p-10">
-        <div className="w-full max-w-md">
-          <div className="mb-6 lg:hidden">
-            <Logo />
+    <div className="flex min-h-screen flex-col">
+      <DemoBanner />
+      <main className="grid flex-1 lg:grid-cols-2">
+        <div className="hidden flex-col bg-ink p-10 lg:flex">
+          <Link to="/">
+            <Logo variant="light" />
+          </Link>
+          <div className="flex flex-1 flex-col justify-center">
+            <p className="font-serif text-3xl font-medium leading-tight text-white">
+              Devolvemos el tiempo <span className="text-sky">a la justicia</span>
+            </p>
+            <ul className="mt-8 flex flex-col gap-4">
+              {benefits[selectedRole].map((b) => (
+                <li key={b} className="flex items-start gap-3 text-[15px] text-[#CBD5E1]">
+                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-sky/20 text-sky">
+                    <Check className="h-3.5 w-3.5" />
+                  </span>
+                  {b}
+                </li>
+              ))}
+            </ul>
           </div>
-          <h1 className="font-serif text-2xl font-medium text-ink">Te damos la bienvenida</h1>
+        </div>
+
+        <div className="flex items-center justify-center p-6 sm:p-10">
+          <div className="w-full max-w-md">
+            <div className="mb-6 lg:hidden">
+              <Link to="/">
+                <Logo />
+              </Link>
+            </div>
+            <h1 className="font-serif text-2xl font-medium text-ink">Te damos la bienvenida</h1>
 
           <div className="mt-5 inline-flex w-full rounded-full bg-[#F1F5F9] p-1" role="group" aria-label="Elige tu rol">
             <button
               type="button"
-              onClick={() => setSelectedRole('madre')}
+              onClick={() => handleRoleChange('madre')}
               className={`flex-1 rounded-full py-2 text-sm font-semibold transition-colors ${
                 selectedRole === 'madre' ? 'bg-white text-ink shadow-sm' : 'text-[#475569]'
               }`}
@@ -109,7 +143,7 @@ export function Login() {
             </button>
             <button
               type="button"
-              onClick={() => setSelectedRole('abogado')}
+              onClick={() => handleRoleChange('abogado')}
               className={`flex-1 rounded-full py-2 text-sm font-semibold transition-colors ${
                 selectedRole === 'abogado' ? 'bg-white text-ink shadow-sm' : 'text-[#475569]'
               }`}
@@ -121,7 +155,7 @@ export function Login() {
           <div className="mt-5 flex gap-5 border-b border-[#E2E8F0]">
             <button
               type="button"
-              onClick={() => setMode('ingresar')}
+              onClick={() => handleModeChange('ingresar')}
               className={`-mb-px border-b-2 px-1 py-2 text-sm font-semibold ${
                 mode === 'ingresar' ? 'border-ink text-ink' : 'border-transparent text-[#475569]'
               }`}
@@ -130,7 +164,7 @@ export function Login() {
             </button>
             <button
               type="button"
-              onClick={() => setMode('crear')}
+              onClick={() => handleModeChange('crear')}
               className={`-mb-px border-b-2 px-1 py-2 text-sm font-semibold ${
                 mode === 'crear' ? 'border-ink text-ink' : 'border-transparent text-[#475569]'
               }`}
@@ -211,6 +245,10 @@ export function Login() {
             )}
 
             {mode === 'ingresar' && (
+              <p className="text-xs text-[#475569]">Cuenta de demostración precargada — solo pulsa "Ingresar".</p>
+            )}
+
+            {mode === 'ingresar' && (
               <div className="text-right">
                 <button type="button" className="text-sm font-medium text-link hover:underline">
                   ¿La olvidaste?
@@ -234,8 +272,9 @@ export function Login() {
               {googleLoading ? 'Conectando…' : 'Continuar con Google'}
             </Button>
           </form>
+          </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
