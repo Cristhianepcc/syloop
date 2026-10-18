@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  @apply bg-white font-sans text-[#334155] antialiased;
+  letter-spacing: -0.01em;
+}
+
+* {
+  min-width: 0;
+}
+
+::selection {
+  background-color: #bfd7fb;
+}
+
+.focus-ring {
+  @apply outline-none ring-2 ring-brand ring-offset-2 ring-offset-white;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 999px;
+}

@@ -1,0 +1,164 @@
+import { useState } from 'react';
+import { CalendarClock, Users2, Milestone } from 'lucide-react';
+import { Card, CardBlock, CardTitle } from '../../components/ui/Card';
+import { Button } from '../../components/ui/Button';
+import { Select } from '../../components/ui/Select';
+import { Toggle } from '../../components/ui/Toggle';
+import { ThinBars } from '../../components/charts/ThinBars';
+import { GroupedBars } from '../../components/charts/GroupedBars';
+import { custodyByMonth, custodyFullYear2026, casesByStage, activeCases, activeCasesCount, caseMilestones } from '../../data/lawyerDesk';
+import type { MilestoneStatus } from '../../types';
+
+const milestoneStyles: Record<MilestoneStatus, { label: string; className: string }> = {
+  liberado: { label: 'Liberado', className: 'bg-ink text-white' },
+  verificando: { label: 'Verificando', className: 'bg-brand-ink text-white' },
+  custodia: { label: 'En custodia', className: 'bg-[#E2E8F0] text-[#475569]' },
+};
+
+export function CommandCenter() {
+  const [showPeers, setShowPeers] = useState(true);
+  const [range, setRange] = useState<'6m' | '2026'>('6m');
+  const [notice, setNotice] = useState('');
+
+  const custody = range === '6m' ? custodyByMonth : custodyFullYear2026;
+  const inCustody = custodyByMonth[custodyByMonth.length - 1].value;
+  const upcoming = activeCases.filter((c) => c.nextHearing);
+
+  return (
+    <div className="flex flex-col gap-6">
+      <header className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <h1 className="font-serif text-[32px] font-medium text-ink">Centro de mando</h1>
+          <p className="mt-1 text-sm text-[#475569]">Dra. Carmen Valdivia Salas · CAA N.º 4521</p>
+        </div>
+        <div className="flex flex-wrap items-center gap-4">
+          <div className="flex items-center gap-2.5 text-sm font-medium text-[#475569]">
+            <Toggle checked={showPeers} onChange={setShowPeers} label="Mostrar comparación con pares" />
+            <button type="button" onClick={() => setShowPeers((v) => !v)} className="font-medium">
+              Pares
+            </button>
+          </div>
+          <span className="rounded-full bg-tint px-3.5 py-1.5 text-sm font-semibold text-brand-ink">
+            En custodia: S/ {inCustody.toLocaleString('es-PE')}
+          </span>
+          <Button
+            variant="primary"
+            onClick={() => {
+              setNotice('El asistente para abogados estará disponible pronto.');
+              setTimeout(() => setNotice(''), 2500);
+            }}
+          >
+            Preguntar a Syloop
+          </Button>
+        </div>
+      </header>
+      {notice && <p className="text-sm font-medium text-brand-ink">{notice}</p>}
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Card>
+          <div className="flex items-start justify-between gap-3">
+            <CardTitle>Custodia</CardTitle>
+            <Select aria-label="Rango de custodia" value={range} onChange={(e) => setRange(e.target.value as '6m' | '2026')} className="!min-h-[38px] text-sm">
+              <option value="6m">6 meses</option>
+              <option value="2026">2026</option>
+            </Select>
+          </div>
+          <div className="mt-4">
+            <ThinBars
+              data={custody.map((c) => c.value)}
+              overlay={showPeers ? custody.map((c) => c.peer) : undefined}
+            />
+          </div>
+          <div className="mt-2 flex justify-between text-xs text-[#475569]">
+            {custody.map((c) => (
+              <span key={c.month}>{c.month}</span>
+            ))}
+          </div>
+        </Card>
+
+        <Card>
+          <CardTitle>Casos por etapa</CardTitle>
+          <div className="mt-4">
+            <GroupedBars
+              categories={casesByStage.map((c) => c.stage)}
+              series={
+                showPeers
+                  ? [
+                      { label: 'Mis casos', color: '#4A8CF0' },
+                      { label: 'Pares', color: '#CBD5E1' },
+                      { label: 'Subsanación', color: '#F59E0B' },
+                    ]
+                  : [
+                      { label: 'Mis casos', color: '#4A8CF0' },
+                      { label: 'Subsanación', color: '#F59E0B' },
+                    ]
+              }
+              values={
+                showPeers
+                  ? [casesByStage.map((c) => c.mine), casesByStage.map((c) => c.peer), casesByStage.map((c) => c.subsanacion)]
+                  : [casesByStage.map((c) => c.mine), casesByStage.map((c) => c.subsanacion)]
+              }
+            />
+          </div>
+        </Card>
+
+        <Card className="flex flex-col items-start gap-2">
+          <CardTitle>Casos activos</CardTitle>
+          <p className="font-serif text-5xl font-medium text-ink">{activeCasesCount}</p>
+          <p className="text-sm text-[#475569]">Distribuidos en los 6 distritos de Arequipa.</p>
+        </Card>
+
+        <Card>
+          <CardTitle>Clientas más activas</CardTitle>
+          <ul className="mt-4 flex flex-col gap-2">
+            {activeCases.slice(0, 5).map((c) => (
+              <li key={c.id} className="flex items-center justify-between gap-3 rounded-block bg-canvas px-3 py-2.5 text-sm">
+                <span className="flex items-center gap-2 font-medium text-ink">
+                  <Users2 className="h-4 w-4 text-brand" /> {c.clientName}
+                </span>
+                <span className="text-xs text-[#475569]">{c.stage}</span>
+              </li>
+            ))}
+          </ul>
+        </Card>
+
+        <Card>
+          <CardTitle>Próximas audiencias</CardTitle>
+          {upcoming.length === 0 ? (
+            <p className="mt-3 text-sm text-[#475569]">No tienes audiencias programadas por ahora.</p>
+          ) : (
+            <ul className="mt-4 flex flex-col gap-2">
+              {upcoming.map((c) => (
+                <li key={c.id} className="flex items-center justify-between gap-3 rounded-block bg-canvas px-3 py-2.5 text-sm">
+                  <span className="flex items-center gap-2 font-medium text-ink">
+                    <CalendarClock className="h-4 w-4 text-brand" /> {c.clientName}
+                  </span>
+                  <span className="text-xs font-semibold text-brand-ink">{c.nextHearing}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Card>
+
+        <Card className="lg:col-span-2">
+          <CardTitle>Hitos por caso</CardTitle>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {caseMilestones.map((m) => (
+              <CardBlock key={m.caseId} className="flex items-center justify-between gap-3">
+                <span>
+                  <span className="flex items-center gap-1.5 text-sm font-semibold text-ink">
+                    <Milestone className="h-3.5 w-3.5 text-brand" /> {m.clientName}
+                  </span>
+                  <span className="text-xs text-[#475569]">S/ {m.amount}</span>
+                </span>
+                <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${milestoneStyles[m.status].className}`}>
+                  {milestoneStyles[m.status].label}
+                </span>
+              </CardBlock>
+            ))}
+          </div>
+        </Card>
+      </div>
+    </div>
+  );
+}
