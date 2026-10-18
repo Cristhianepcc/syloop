@@ -84,61 +84,63 @@ export function Sidebar({ role }: { role: Role }) {
         </label>
       </div>
 
-      <nav className="mt-5 flex flex-col gap-0.5 px-3" aria-label="Navegación principal">
-        {nav.map((item) => (
-          <Link
-            key={item.to}
-            to={item.to}
-            className={`flex min-h-[44px] items-center justify-between gap-2.5 rounded-[10px] px-3 text-[14px] font-medium transition-colors ${
-              isActive(item.to) ? 'bg-sidebar-active text-white' : 'text-[#CBD5E1] hover:bg-sidebar-hover hover:text-white'
-            }`}
-          >
-            <span className="flex items-center gap-2.5">
-              {item.icon}
-              {item.label}
-            </span>
-            {!!item.badge && (
-              <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-brand-ink px-1 text-[11px] font-bold text-white">
-                {item.badge}
+      <div className="scrollbar-thin mt-5 flex-1 overflow-y-auto">
+        <nav className="flex flex-col gap-0.5 px-3" aria-label="Navegación principal">
+          {nav.map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              className={`flex min-h-[44px] items-center justify-between gap-2.5 rounded-[10px] px-3 text-[14px] font-medium transition-colors ${
+                isActive(item.to) ? 'bg-sidebar-active text-white' : 'text-[#CBD5E1] hover:bg-sidebar-hover hover:text-white'
+              }`}
+            >
+              <span className="flex items-center gap-2.5">
+                {item.icon}
+                {item.label}
               </span>
-            )}
-          </Link>
-        ))}
-      </nav>
+              {!!item.badge && (
+                <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-brand-ink px-1 text-[11px] font-bold text-white">
+                  {item.badge}
+                </span>
+              )}
+            </Link>
+          ))}
+        </nav>
 
-      {role === 'madre' ? (
-        <>
-          <SidebarSection title="Herramientas">
-            <SidebarLink to="/madre/abogados" icon={<Users className="h-4 w-4" />} label="Abogados" />
-          </SidebarSection>
-          <SidebarSection title="Recientes">
-            {recentDocs.map((d) => (
-              <SidebarLink
-                key={d.id}
-                to={`/madre/expediente?doc=${d.id}`}
-                icon={<FileText className="h-4 w-4" />}
-                label={d.name}
-              />
-            ))}
-          </SidebarSection>
-          <SidebarSection title="Mis expedientes">
-            <SidebarLink to="/madre/expediente" icon={<FileText className="h-4 w-4" />} label="Exp. 01234-2026" />
-          </SidebarSection>
-        </>
-      ) : (
-        <>
-          <SidebarSection title="Apps">
-            <SidebarLink to="/directorio" icon={<Users className="h-4 w-4" />} label="Mi perfil público" />
-          </SidebarSection>
-          <SidebarSection title="Clientas">
-            {clientRoster.map((c) => (
-              <SidebarLink key={c.id} to="/abogado" icon={<Users className="h-4 w-4" />} label={c.clientName} />
-            ))}
-          </SidebarSection>
-        </>
-      )}
+        {role === 'madre' ? (
+          <>
+            <SidebarSection title="Herramientas">
+              <SidebarLink to="/madre/abogados" icon={<Users className="h-4 w-4" />} label="Abogados" />
+            </SidebarSection>
+            <SidebarSection title="Recientes">
+              {recentDocs.map((d) => (
+                <SidebarLink
+                  key={d.id}
+                  to={`/madre/expediente?doc=${d.id}`}
+                  icon={<FileText className="h-4 w-4" />}
+                  label={d.name}
+                />
+              ))}
+            </SidebarSection>
+            <SidebarSection title="Mis expedientes">
+              <SidebarLink to="/madre/expediente" icon={<FileText className="h-4 w-4" />} label="Exp. 01234-2026" />
+            </SidebarSection>
+          </>
+        ) : (
+          <>
+            <SidebarSection title="Apps">
+              <SidebarLink to="/directorio" icon={<Users className="h-4 w-4" />} label="Mi perfil público" />
+            </SidebarSection>
+            <SidebarSection title="Clientas">
+              {clientRoster.map((c) => (
+                <SidebarLink key={c.id} to="/abogado" icon={<Users className="h-4 w-4" />} label={c.clientName} />
+              ))}
+            </SidebarSection>
+          </>
+        )}
+      </div>
 
-      <div className="mt-auto flex flex-col gap-3 px-3 pt-4">
+      <div className="flex shrink-0 flex-col gap-3 px-3 pt-4">
         <div className="flex items-center justify-between gap-2 rounded-[10px] px-3 py-2">
           <span className="flex items-center gap-2.5 overflow-hidden">
             <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-sidebar-hover text-xs font-bold text-white">
