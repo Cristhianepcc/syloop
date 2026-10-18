@@ -1,8 +1,9 @@
-import { HashRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { PublicLayout } from './components/layout/PublicLayout';
 import { AppLayout } from './components/layout/AppLayout';
 import { Landing } from './pages/public/Landing';
 import { Login } from './pages/public/Login';
+import { Directorio } from './pages/public/Directorio';
 import { NotFound } from './pages/public/NotFound';
 import { Panel } from './pages/mother/Panel';
 import { Ruta } from './pages/mother/Ruta';
@@ -20,13 +21,15 @@ export default function App() {
       <Routes>
         <Route path="/" element={<PublicLayout><Landing /></PublicLayout>} />
         <Route path="/ingresar" element={<PublicLayout><Login /></PublicLayout>} />
-        <Route path="/abogados" element={<AppLayout role="madre"><Marketplace /></AppLayout>} />
+        <Route path="/directorio" element={<PublicLayout><Directorio /></PublicLayout>} />
+        <Route path="/abogados" element={<Navigate to="/directorio" replace />} />
 
         <Route path="/madre/panel" element={<AppLayout role="madre"><Panel /></AppLayout>} />
         <Route path="/madre/ruta" element={<AppLayout role="madre"><Ruta /></AppLayout>} />
         <Route path="/madre/asistente" element={<AppLayout role="madre"><Asistente /></AppLayout>} />
         <Route path="/madre/expediente" element={<AppLayout role="madre"><Expediente /></AppLayout>} />
         <Route path="/madre/gastos" element={<AppLayout role="madre"><Gastos /></AppLayout>} />
+        <Route path="/madre/abogados" element={<AppLayout role="madre"><Marketplace /></AppLayout>} />
 
         <Route path="/abogado" element={<AppLayout role="abogado"><CommandCenter /></AppLayout>} />
         <Route path="/abogado/adquisicion" element={<AppLayout role="abogado"><Leads /></AppLayout>} />

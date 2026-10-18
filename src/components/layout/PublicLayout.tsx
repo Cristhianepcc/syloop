@@ -9,7 +9,7 @@ const navLinks = [
   { label: 'Cómo funciona', href: '#como-funciona' },
   { label: 'Pizarra de consultas', href: '#pizarra' },
   { label: 'Seguridad', href: '#seguridad' },
-  { label: 'Abogados', to: '/abogados' },
+  { label: 'Abogados', to: '/directorio' },
 ];
 
 export function PublicLayout({ children }: { children: ReactNode }) {
@@ -104,7 +104,9 @@ export function PublicLayout({ children }: { children: ReactNode }) {
 
       <Link
         to="/madre/asistente"
-        className="fixed bottom-5 right-5 z-30 flex min-h-[44px] items-center gap-2 rounded-full bg-ink px-4 text-sm font-semibold text-white shadow-lg hover:bg-[#15202E]"
+        className={`fixed right-5 z-20 flex min-h-[44px] items-center gap-2 rounded-full bg-ink px-4 text-sm font-semibold text-white shadow-lg hover:bg-[#15202E] ${
+          location.pathname === '/directorio' ? 'bottom-24' : 'bottom-5'
+        }`}
       >
         <MessageCircleQuestion className="h-4 w-4" />
         ¿Dudas? Pregúntame
@@ -125,7 +127,7 @@ function Footer() {
           <h2 className="text-xs font-semibold uppercase tracking-[0.1em] text-link">Producto</h2>
           <ul className="mt-3 flex flex-col gap-2 text-sm text-[#475569]">
             <li><a href="#como-funciona">Cómo funciona</a></li>
-            <li><Link to="/abogados">Abogados</Link></li>
+            <li><Link to="/directorio">Abogados</Link></li>
             <li><a href="#pizarra">Pizarra de consultas</a></li>
           </ul>
         </div>

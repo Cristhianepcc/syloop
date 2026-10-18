@@ -41,14 +41,14 @@ export function MobileNav({ role }: { role: Role }) {
   ];
   const motherMore: Item[] = [
     { label: 'Gastos y pensiones', to: '/madre/gastos', icon: <Wallet className="h-4 w-4" /> },
-    { label: 'Abogados', to: '/abogados', icon: <Users className="h-4 w-4" /> },
+    { label: 'Abogados', to: '/madre/abogados', icon: <Users className="h-4 w-4" /> },
   ];
 
   const lawyerBar: Item[] = [
     { label: 'Mando', to: '/abogado', icon: <LayoutDashboard className="h-5 w-5" /> },
     { label: 'Adquisición', to: '/abogado/adquisicion', icon: <Inbox className="h-5 w-5" />, badge: newLeadsCount },
     { label: 'Validación', to: '/abogado/validacion', icon: <ShieldCheck className="h-5 w-5" />, badge: pendingValidationCount },
-    { label: 'Abogados', to: '/abogados', icon: <Users className="h-5 w-5" /> },
+    { label: 'Abogados', to: '/directorio', icon: <Users className="h-5 w-5" /> },
   ];
   const lawyerMore: Item[] = [];
 

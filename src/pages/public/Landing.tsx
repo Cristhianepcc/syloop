@@ -16,6 +16,7 @@ import { Card } from '../../components/ui/Card';
 import { ThinBars } from '../../components/charts/ThinBars';
 import { GroupedBars } from '../../components/charts/GroupedBars';
 import { LawyerCard } from '../../components/cards/LawyerCard';
+import { ArequipaCollage } from '../../components/landing/ArequipaCollage';
 import { VolcanoSilhouette } from '../../components/ui/VolcanoSilhouette';
 import { Logo } from '../../components/ui/Logo';
 import { featuredLawyers } from '../../data/lawyers';
@@ -33,7 +34,7 @@ const guarantees = [
 const stepsByAudience: Record<'madre' | 'abogado', { title: string; description: string; to: string }[]> = {
   madre: [
     { title: 'Cuenta tu caso', description: 'Respondes preguntas simples y la IA organiza tu expediente inicial.', to: '/ingresar' },
-    { title: 'Conecta con un abogado', description: 'Eliges un abogado verificado del CAA según tu zona y presupuesto.', to: '/abogados' },
+    { title: 'Conecta con un abogado', description: 'Eliges un abogado verificado del CAA según tu zona y presupuesto.', to: '/directorio' },
     { title: 'Sigue tu proceso', description: 'Tu expediente se sincroniza con el CEJ y ves cada avance al instante.', to: '/madre/ruta' },
     { title: 'Resuelve con ayuda de la IA', description: 'El asistente te explica cada paso y prepara documentos, siempre revisados por tu abogado.', to: '/madre/asistente' },
     { title: 'Cobra tu pensión', description: 'Verificas los pagos y preparas la liquidación si hay atrasos.', to: '/madre/gastos' },
@@ -111,7 +112,7 @@ function Hero() {
           <Link to="/ingresar">
             <Button variant="primary">Comenzar mi caso gratis</Button>
           </Link>
-          <Link to="/abogados">
+          <Link to="/directorio">
             <Button variant="secondary">Explorar abogados</Button>
           </Link>
         </div>
@@ -303,21 +304,7 @@ function MadeForArequipa() {
   return (
     <section className="bg-canvas px-4 py-20 sm:px-6">
       <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-2 lg:items-center">
-        <div className="relative grid grid-cols-2 gap-3">
-          <div className="col-span-2 flex h-48 items-center justify-center rounded-card bg-[repeating-linear-gradient(135deg,#BFD7FB_0_2px,transparent_2px_10px)] bg-tint-soft text-center text-xs font-medium text-brand-ink">
-            Madre con su hijo en el Centro Histórico
-          </div>
-          <div className="flex h-36 items-center justify-center rounded-card bg-[repeating-linear-gradient(135deg,#BFD7FB_0_2px,transparent_2px_10px)] bg-tint-soft text-center text-xs font-medium text-brand-ink">
-            Abogada con clienta
-          </div>
-          <div className="flex h-36 items-center justify-center rounded-card bg-[repeating-linear-gradient(135deg,#BFD7FB_0_2px,transparent_2px_10px)] bg-tint-soft text-center text-xs font-medium text-brand-ink">
-            Manos con el celular
-          </div>
-          <div className="absolute -bottom-5 left-4 flex items-center gap-2 rounded-card bg-white px-4 py-3 shadow-xl">
-            <RefreshCw className="h-4 w-4 text-brand" />
-            <span className="text-sm font-semibold text-ink">Expediente al día · CEJ hace 2 h</span>
-          </div>
-        </div>
+        <ArequipaCollage />
 
         <div>
           <h2 className="font-serif text-3xl font-medium text-ink sm:text-4xl">
@@ -437,18 +424,18 @@ function FeaturedLawyers() {
       <div className="mx-auto max-w-6xl">
         <div className="flex items-end justify-between gap-4">
           <h2 className="font-serif text-3xl font-medium text-ink sm:text-4xl">Abogados destacados</h2>
-          <Link to="/abogados" className="hidden text-sm font-semibold text-link hover:underline sm:block">
-            Ver todos
+          <Link to="/directorio" className="hidden text-sm font-semibold text-link hover:underline sm:block">
+            Ver marketplace completo
           </Link>
         </div>
         <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {featuredLawyers.map((l) => (
-            <LawyerCard key={l.id} lawyer={l} compact />
+            <LawyerCard key={l.id} lawyer={l} compact requestHref="/directorio" />
           ))}
         </div>
         <div className="mt-6 text-center sm:hidden">
-          <Link to="/abogados" className="text-sm font-semibold text-link hover:underline">
-            Ver todos los abogados
+          <Link to="/directorio" className="text-sm font-semibold text-link hover:underline">
+            Ver marketplace completo
           </Link>
         </div>
       </div>

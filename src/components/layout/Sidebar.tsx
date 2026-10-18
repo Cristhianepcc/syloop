@@ -109,7 +109,7 @@ export function Sidebar({ role }: { role: Role }) {
       {role === 'madre' ? (
         <>
           <SidebarSection title="Herramientas">
-            <SidebarLink to="/abogados" icon={<Users className="h-4 w-4" />} label="Abogados" />
+            <SidebarLink to="/madre/abogados" icon={<Users className="h-4 w-4" />} label="Abogados" />
           </SidebarSection>
           <SidebarSection title="Recientes">
             {recentDocs.map((d) => (
@@ -123,7 +123,7 @@ export function Sidebar({ role }: { role: Role }) {
       ) : (
         <>
           <SidebarSection title="Apps">
-            <SidebarLink to="/abogados" icon={<Users className="h-4 w-4" />} label="Mi perfil público" />
+            <SidebarLink to="/directorio" icon={<Users className="h-4 w-4" />} label="Mi perfil público" />
           </SidebarSection>
           <SidebarSection title="Recientes">
             {recentCases.map((c) => (
@@ -172,10 +172,15 @@ function SidebarSection({ title, children }: { title: string; children: ReactNod
 }
 
 function SidebarLink({ to, icon, label }: { to: string; icon: ReactNode; label: string }) {
+  const location = useLocation();
+  const isActive = location.pathname.startsWith(to);
+
   return (
     <Link
       to={to}
-      className="flex min-h-[38px] items-center gap-2.5 truncate rounded-[10px] px-3 text-[13px] text-[#CBD5E1] hover:bg-sidebar-hover hover:text-white"
+      className={`flex min-h-[38px] items-center gap-2.5 truncate rounded-[10px] px-3 text-[13px] transition-colors ${
+        isActive ? 'bg-sidebar-active text-white' : 'text-[#CBD5E1] hover:bg-sidebar-hover hover:text-white'
+      }`}
     >
       {icon}
       <span className="truncate">{label}</span>

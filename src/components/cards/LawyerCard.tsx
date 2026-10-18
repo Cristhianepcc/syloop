@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { Star, MapPin, Clock, Languages } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
@@ -11,6 +12,8 @@ interface LawyerCardProps {
   onToggleCompare?: (id: string) => void;
   requested?: boolean;
   onToggleRequest?: (id: string) => void;
+  /** When set, the request CTA is a plain navigation link (public/anonymous context) instead of a stateful toggle button. */
+  requestHref?: string;
 }
 
 export function LawyerCard({
@@ -21,6 +24,7 @@ export function LawyerCard({
   onToggleCompare,
   requested = false,
   onToggleRequest,
+  requestHref,
 }: LawyerCardProps) {
   return (
     <div className="flex flex-col gap-4 rounded-card bg-white p-6">
@@ -75,13 +79,21 @@ export function LawyerCard({
           </div>
 
           <div className="flex items-center gap-3">
-            <Button
-              variant={requested ? 'secondary' : 'primary'}
-              className="flex-1"
-              onClick={() => onToggleRequest?.(lawyer.id)}
-            >
-              {requested ? 'Solicitud enviada' : 'Solicitar asesoría'}
-            </Button>
+            {requestHref ? (
+              <Link to={requestHref} className="flex-1">
+                <Button variant="primary" className="w-full">
+                  Solicitar asesoría
+                </Button>
+              </Link>
+            ) : (
+              <Button
+                variant={requested ? 'secondary' : 'primary'}
+                className={`flex-1 ${requested ? '!border-transparent !bg-tint !text-brand-ink hover:!bg-tint' : ''}`}
+                onClick={() => onToggleRequest?.(lawyer.id)}
+              >
+                {requested ? 'Solicitud enviada ✓' : 'Solicitar asesoría'}
+              </Button>
+            )}
             {showCompare && (
               <label className="flex items-center gap-2 text-sm text-[#475569]">
                 <input
@@ -95,6 +107,12 @@ export function LawyerCard({
             )}
           </div>
         </>
+      )}
+
+      {compact && requestHref && (
+        <Link to={requestHref} className="text-sm font-semibold text-link hover:underline">
+          Solicitar asesoría →
+        </Link>
       )}
     </div>
   );
