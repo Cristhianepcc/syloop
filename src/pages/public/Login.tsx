@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Check } from 'lucide-react';
 import { Logo } from '../../components/ui/Logo';
 import { Button } from '../../components/ui/Button';
-import { DemoBanner } from '../../components/layout/DemoBanner';
 import { useAppStore } from '../../store/useAppStore';
 import type { Role } from '../../types';
 
@@ -99,7 +98,6 @@ export function Login() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <DemoBanner />
       <main className="grid flex-1 lg:grid-cols-2">
         <div className="hidden flex-col bg-ink p-10 lg:flex">
           <Link to="/">

@@ -3,7 +3,6 @@ import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, MessageCircleQuestion } from 'lucide-react';
 import { Logo } from '../ui/Logo';
 import { Button } from '../ui/Button';
-import { DemoBanner } from './DemoBanner';
 
 const navLinks = [
   { label: 'Cómo funciona', href: '#como-funciona' },
@@ -19,7 +18,6 @@ export function PublicLayout({ children }: { children: ReactNode }) {
 
   return (
     <div className="flex min-h-screen flex-col bg-white">
-      <DemoBanner />
       <header className="sticky top-0 z-40 border-b border-[#E2E8F0] bg-white/95 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
           <Link to="/" className="shrink-0">
