@@ -1,4 +1,4 @@
-import type { ActiveCase, CaseMilestone, Lead, ValidationDoc } from '../types';
+import type { ActiveCase, AiAlert, CaseMilestone, EmpathyRating, Lead, SubscriptionPlan, ValidationDoc } from '../types';
 
 export const leads: Lead[] = [
   {
@@ -105,4 +105,47 @@ export const casesByStage = [
   { stage: 'Audiencia', mine: 7, peer: 6, subsanacion: 0 },
   { stage: 'Sentencia', mine: 3, peer: 5, subsanacion: 0 },
   { stage: 'Ejecución', mine: 2, peer: 3, subsanacion: 1 },
+];
+
+export const aiAlerts: AiAlert[] = [
+  { id: 'alert-1', clientName: 'Yolanda Ramírez', text: 'Vence en 2 días el plazo para presentar la contestación.', severity: 'urgente' },
+  { id: 'alert-2', clientName: 'María Torres', text: 'Posible omisión: falta el acta de conciliación en el expediente.', severity: 'atencion' },
+  { id: 'alert-3', clientName: 'Katherine Flores', text: 'Nueva notificación del juzgado, revisar antes del 28 de octubre.', severity: 'atencion' },
+];
+
+export const videoShowcase = {
+  videosPublished: 3,
+  totalViews: 2479,
+  leadsGenerated: 18,
+};
+
+export const lawyerReputation: EmpathyRating[] = [
+  { label: 'Empatía', value: 4.8 },
+  { label: 'Claridad', value: 4.9 },
+  { label: 'Puntualidad', value: 4.6 },
+];
+
+export const subscriptionPlans: SubscriptionPlan[] = [
+  {
+    id: 'pro',
+    name: 'Plan Pro',
+    price: 50,
+    features: [
+      'Panel de gestión de expedientes',
+      'Asistente de IA para borradores',
+      'Red profesional (estilo LinkedIn legal)',
+      'Recepción directa de leads',
+    ],
+  },
+  {
+    id: 'enterprise',
+    name: 'Plan Enterprise',
+    price: 99,
+    features: [
+      'Todo lo de Plan Pro',
+      'Gestión colaborativa de carteras de clientes',
+      'Facturación de pagos por hitos',
+      'Sincronización RPA con el Poder Judicial',
+    ],
+  },
 ];

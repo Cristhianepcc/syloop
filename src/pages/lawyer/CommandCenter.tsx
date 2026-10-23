@@ -1,12 +1,25 @@
 import { useState } from 'react';
-import { CalendarClock, Users2, Milestone } from 'lucide-react';
+import { CalendarClock, Users2, Milestone, Crown, CheckCircle2, AlertTriangle, Video } from 'lucide-react';
 import { Card, CardBlock, CardTitle } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Select } from '../../components/ui/Select';
 import { Toggle } from '../../components/ui/Toggle';
+import { Badge } from '../../components/ui/Badge';
 import { ThinBars } from '../../components/charts/ThinBars';
 import { GroupedBars } from '../../components/charts/GroupedBars';
-import { custodyByMonth, custodyFullYear2026, casesByStage, activeCases, activeCasesCount, caseMilestones } from '../../data/lawyerDesk';
+import { HBars } from '../../components/charts/HBars';
+import {
+  custodyByMonth,
+  custodyFullYear2026,
+  casesByStage,
+  activeCases,
+  activeCasesCount,
+  caseMilestones,
+  aiAlerts,
+  videoShowcase,
+  lawyerReputation,
+  subscriptionPlans,
+} from '../../data/lawyerDesk';
 import type { MilestoneStatus } from '../../types';
 
 const milestoneStyles: Record<MilestoneStatus, { label: string; className: string }> = {
@@ -140,8 +153,14 @@ export function CommandCenter() {
           )}
         </Card>
 
+        <PlanCard />
+        <AlertsCard />
+
         <Card className="lg:col-span-2">
           <CardTitle>Hitos por caso</CardTitle>
+          <p className="mt-1 text-sm text-[#475569]">
+            Los documentos probatorios de cada hito quedan respaldados en la bóveda digital de Syloop.
+          </p>
           <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {caseMilestones.map((m) => (
               <CardBlock key={m.caseId} className="flex items-center justify-between gap-3">
@@ -158,7 +177,136 @@ export function CommandCenter() {
             ))}
           </div>
         </Card>
+
+        <VitrineCard />
       </div>
     </div>
+  );
+}
+
+function PlanCard() {
+  const [planId, setPlanId] = useState<'pro' | 'enterprise'>('pro');
+  const plan = subscriptionPlans.find((p) => p.id === planId)!;
+  const other = subscriptionPlans.find((p) => p.id !== planId)!;
+
+  return (
+    <Card>
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <CardTitle>Tu plan</CardTitle>
+          <p className="mt-1 text-sm text-[#475569]">Suscripción mensual de Syloop</p>
+        </div>
+        <Badge tone="brand">
+          <Crown className="h-3.5 w-3.5" /> {plan.name}
+        </Badge>
+      </div>
+      <p className="mt-3 font-serif text-3xl font-medium text-ink">
+        S/ {plan.price}
+        <span className="font-sans text-sm font-normal text-[#475569]">/mes</span>
+      </p>
+      <ul className="mt-3 flex flex-col gap-1.5 text-sm text-[#475569]">
+        {plan.features.map((f) => (
+          <li key={f} className="flex gap-2">
+            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
+            {f}
+          </li>
+        ))}
+      </ul>
+      <Button variant="secondary" className="mt-4 w-full" onClick={() => setPlanId(other.id)}>
+        {planId === 'pro'
+          ? `Mejorar a ${other.name} (S/ ${other.price}/mes)`
+          : `Volver a ${other.name} (S/ ${other.price}/mes)`}
+      </Button>
+    </Card>
+  );
+}
+
+function AlertsCard() {
+  const [alerts, setAlerts] = useState(aiAlerts);
+
+  function dismiss(id: string) {
+    setAlerts((prev) => prev.filter((a) => a.id !== id));
+  }
+
+  return (
+    <Card>
+      <div className="flex items-center justify-between gap-3">
+        <CardTitle>Alertas de la IA</CardTitle>
+        <Badge tone={alerts.length > 0 ? 'warn' : 'success'}>{alerts.length}</Badge>
+      </div>
+      <p className="mt-1 text-sm text-[#475569]">Plazos y omisiones detectadas, pendientes de tu revisión.</p>
+      {alerts.length === 0 ? (
+        <p className="mt-4 text-sm text-[#475569]">No tienes alertas pendientes. Buen trabajo.</p>
+      ) : (
+        <div className="mt-4 flex flex-col gap-2">
+          {alerts.map((a) => (
+            <div
+              key={a.id}
+              className={`flex items-start justify-between gap-3 rounded-block p-3 ${
+                a.severity === 'urgente' ? 'bg-warn-panel' : 'bg-canvas'
+              }`}
+            >
+              <div className="flex gap-2.5">
+                <AlertTriangle
+                  className={`mt-0.5 h-4 w-4 shrink-0 ${a.severity === 'urgente' ? 'text-warn-text' : 'text-brand'}`}
+                />
+                <div>
+                  <p className="text-sm font-semibold text-ink">{a.clientName}</p>
+                  <p className="text-xs text-[#475569]">{a.text}</p>
+                </div>
+              </div>
+              <Button size="sm" variant="secondary" onClick={() => dismiss(a.id)}>
+                Revisado
+              </Button>
+            </div>
+          ))}
+        </div>
+      )}
+    </Card>
+  );
+}
+
+function VitrineCard() {
+  const [notice, setNotice] = useState('');
+
+  function handleUpload() {
+    setNotice('Tu video se publicará en la vitrina en unos minutos (demo).');
+    setTimeout(() => setNotice(''), 2500);
+  }
+
+  return (
+    <Card>
+      <CardTitle>Vitrina y reputación</CardTitle>
+      <p className="mt-1 text-sm text-[#475569]">Tus videos educativos atraen clientas de forma orgánica.</p>
+      <div className="mt-4 grid grid-cols-3 gap-3">
+        <CardBlock>
+          <p className="font-serif text-2xl font-medium text-ink">{videoShowcase.videosPublished}</p>
+          <p className="mt-1 text-xs text-[#475569]">videos publicados</p>
+        </CardBlock>
+        <CardBlock>
+          <p className="font-serif text-2xl font-medium text-ink">{videoShowcase.totalViews.toLocaleString('es-PE')}</p>
+          <p className="mt-1 text-xs text-[#475569]">vistas totales</p>
+        </CardBlock>
+        <CardBlock>
+          <p className="font-serif text-2xl font-medium text-brand-ink">{videoShowcase.leadsGenerated}</p>
+          <p className="mt-1 text-xs text-[#475569]">leads generados</p>
+        </CardBlock>
+      </div>
+      <div className="mt-4">
+        <HBars
+          data={lawyerReputation.map((r) => ({ label: r.label, value: r.value.toFixed(1) }))}
+          values={lawyerReputation.map((r) => r.value)}
+        />
+      </div>
+      <Button
+        variant="secondary"
+        className="mt-4 w-full"
+        icon={<Video className="h-4 w-4 text-brand" />}
+        onClick={handleUpload}
+      >
+        Subir nuevo video
+      </Button>
+      {notice && <p className="mt-2 text-sm font-medium text-brand-ink">{notice}</p>}
+    </Card>
   );
 }

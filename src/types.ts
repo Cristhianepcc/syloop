@@ -152,3 +152,33 @@ export interface ActiveCase {
   district: District;
   nextHearing?: string;
 }
+
+export interface EducationalVideo {
+  id: string;
+  title: string;
+  lawyerName: string;
+  duration: string;
+  topic: string;
+  views: number;
+}
+
+export interface EmpathyRating {
+  label: string;
+  value: number;
+}
+
+export type AlertSeverity = 'urgente' | 'atencion';
+
+export interface AiAlert {
+  id: string;
+  clientName: string;
+  text: string;
+  severity: AlertSeverity;
+}
+
+export interface SubscriptionPlan {
+  id: 'pro' | 'enterprise';
+  name: string;
+  price: number;
+  features: string[];
+}

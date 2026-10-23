@@ -1,6 +1,16 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronDown, RefreshCw, Upload, Undo2, Sparkles, MessageCircle, PhoneCall } from 'lucide-react';
+import {
+  ChevronDown,
+  RefreshCw,
+  Upload,
+  Undo2,
+  Sparkles,
+  MessageCircle,
+  PhoneCall,
+  Star,
+  PlayCircle,
+} from 'lucide-react';
 import { Card, CardBlock, CardTitle } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Select } from '../../components/ui/Select';
@@ -12,6 +22,7 @@ import { useAppStore } from '../../store/useAppStore';
 import { progressBars, courtAverageCurve, currentProgressPercent } from '../../data/progress';
 import { pensionByMonth, totalPendiente } from '../../data/pension';
 import { expenseCategories } from '../../data/expenses';
+import { educationalVideos, lawyerEmpathyRatings } from '../../data/education';
 import type { RecommendedAction } from '../../types';
 
 const recommendedActions: RecommendedAction[] = [
@@ -87,6 +98,8 @@ export function Panel() {
         <WhatsNextCard />
         <ExpensesCard />
         <PendingDocsCard />
+        <ReputationCard />
+        <VideosCard />
         <HelpCard />
       </div>
     </div>
@@ -243,6 +256,70 @@ function PendingDocsCard() {
           <Undo2 className="h-3.5 w-3.5" /> Deshacer última subida
         </button>
       )}
+    </Card>
+  );
+}
+
+function ReputationCard() {
+  return (
+    <Card>
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <CardTitle>Reseñas de tu abogada</CardTitle>
+          <p className="mt-1 text-sm text-[#475569]">Dra. Carmen Valdivia Salas</p>
+        </div>
+        <span className="flex items-center gap-1 rounded-full bg-tint px-2.5 py-1 text-sm font-semibold text-brand-ink">
+          <Star className="h-3.5 w-3.5 fill-current" /> 4.9
+        </span>
+      </div>
+      <p className="mt-3 text-xs text-[#475569]">
+        Calificada por otras madres de Syloop, no solo por el resultado de su caso.
+      </p>
+      <div className="mt-4">
+        <HBars
+          data={lawyerEmpathyRatings.map((r) => ({ label: r.label, value: r.value.toFixed(1) }))}
+          values={lawyerEmpathyRatings.map((r) => r.value)}
+        />
+      </div>
+    </Card>
+  );
+}
+
+function VideosCard() {
+  const [playingId, setPlayingId] = useState<string | null>(null);
+
+  function handlePlay(id: string) {
+    setPlayingId(id);
+    setTimeout(() => setPlayingId(null), 2000);
+  }
+
+  return (
+    <Card>
+      <div className="flex items-start justify-between gap-3">
+        <CardTitle>Videos educativos para ti</CardTitle>
+        <Badge tone="success">Gratis</Badge>
+      </div>
+      <p className="mt-1 text-sm text-[#475569]">Clips cortos grabados por abogados verificados del CAA.</p>
+      <div className="mt-4 flex flex-col gap-2">
+        {educationalVideos.map((v) => (
+          <div key={v.id} className="flex items-center justify-between gap-3 rounded-block bg-canvas p-3">
+            <div>
+              <p className="text-sm font-semibold text-ink">{v.title}</p>
+              <p className="text-xs text-[#475569]">
+                {v.lawyerName} · {v.duration}
+              </p>
+            </div>
+            <Button
+              size="sm"
+              variant="secondary"
+              icon={<PlayCircle className="h-3.5 w-3.5" />}
+              onClick={() => handlePlay(v.id)}
+            >
+              {playingId === v.id ? 'Reproduciendo…' : 'Ver'}
+            </Button>
+          </div>
+        ))}
+      </div>
     </Card>
   );
 }
