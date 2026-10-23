@@ -4,7 +4,28 @@ import { safeStorage } from './safeStorage';
 import { documents as initialDocuments } from '../data/documents';
 import { leads as initialLeads, validationQueue as initialValidationQueue } from '../data/lawyerDesk';
 import { boardQuestions as initialBoardQuestions } from '../data/board';
-import type { BoardQuestion, ChatMessage, DocumentItem, Lead, Role, ValidationDoc } from '../types';
+import { myLawyer } from '../data/lawyers';
+import type {
+  BoardQuestion,
+  ChatMessage,
+  DocumentItem,
+  Lead,
+  LawyerProfileDraft,
+  Role,
+  ValidationDoc,
+} from '../types';
+
+const initialLawyerProfile: LawyerProfileDraft = {
+  bio: myLawyer.bio,
+  district: myLawyer.district,
+  modalidad: myLawyer.modalidad,
+  specialties: myLawyer.specialties,
+  languages: myLawyer.languages,
+  pricePerHito: myLawyer.pricePerHito,
+  responseHours: 2,
+  listed: true,
+  acceptingClients: true,
+};
 
 interface AppState {
   role: Role;
@@ -45,6 +66,9 @@ interface AppState {
   validationQueue: ValidationDoc[];
   setValidationStatus: (id: string, status: ValidationDoc['status'], editedText?: string) => void;
 
+  lawyerProfile: LawyerProfileDraft;
+  saveLawyerProfile: (profile: LawyerProfileDraft) => void;
+
   boardQuestions: BoardQuestion[];
   addBoardQuestion: (question: string) => void;
   answerBoardQuestion: (id: string, answer: string, lawyerName: string) => void;
@@ -67,6 +91,7 @@ const initialPersistedState = {
   leads: initialLeads,
   validationQueue: initialValidationQueue,
   boardQuestions: initialBoardQuestions,
+  lawyerProfile: initialLawyerProfile,
 };
 
 export const useAppStore = create<AppState>()(
@@ -119,6 +144,8 @@ export const useAppStore = create<AppState>()(
             v.id === id ? { ...v, status, aiText: editedText ?? v.aiText } : v
           ),
         })),
+
+      saveLawyerProfile: (profile) => set({ lawyerProfile: profile }),
 
       addBoardQuestion: (question) =>
         set((s) => ({

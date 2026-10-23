@@ -1,4 +1,4 @@
-import type { Lawyer } from '../types';
+import type { District, Lawyer, LawyerProfileDraft } from '../types';
 
 export const lawyers: Lawyer[] = [
   {
@@ -100,3 +100,45 @@ export const lawyers: Lawyer[] = [
 ];
 
 export const featuredLawyers = [lawyers[0], lawyers[2], lawyers[3]];
+
+/** The lawyer whose account is signed in on the demo's "abogado" role. */
+export const MY_LAWYER_ID = 'valdivia';
+export const myLawyer = lawyers.find((l) => l.id === MY_LAWYER_ID)!;
+
+export const specialtyCatalogue = [
+  'Pensión de alimentos',
+  'Asignación anticipada',
+  'Conciliación',
+  'Tenencia',
+  'Régimen de visitas',
+  'Ejecución de sentencias',
+  'Violencia familiar',
+  'Filiación',
+  'Familia',
+];
+
+export const languageCatalogue = ['Español', 'Quechua', 'Aymara', 'Inglés'];
+
+export const districtCatalogue: District[] = [
+  'Cercado',
+  'Yanahuara',
+  'Cayma',
+  'Paucarpata',
+  'J. L. Bustamante y Rivero',
+  'Cerro Colorado',
+];
+
+/** Applies the signed-in lawyer's saved profile edits on top of the seed record. */
+export function applyProfile(lawyer: Lawyer, profile: LawyerProfileDraft): Lawyer {
+  if (lawyer.id !== MY_LAWYER_ID) return lawyer;
+  return {
+    ...lawyer,
+    bio: profile.bio,
+    district: profile.district,
+    modalidad: profile.modalidad,
+    specialties: profile.specialties,
+    languages: profile.languages,
+    pricePerHito: profile.pricePerHito,
+    responseTime: `Responde en ${profile.responseHours} h`,
+  };
+}

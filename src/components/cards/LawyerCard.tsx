@@ -14,6 +14,8 @@ interface LawyerCardProps {
   onToggleRequest?: (id: string) => void;
   /** When set, the request CTA is a plain navigation link (public/anonymous context) instead of a stateful toggle button. */
   requestHref?: string;
+  /** The lawyer is listed but has paused new cases, so the request CTA is replaced by a notice. */
+  unavailable?: boolean;
 }
 
 export function LawyerCard({
@@ -25,6 +27,7 @@ export function LawyerCard({
   requested = false,
   onToggleRequest,
   requestHref,
+  unavailable = false,
 }: LawyerCardProps) {
   return (
     <div className="flex flex-col gap-4 rounded-card bg-white p-6">
@@ -79,7 +82,11 @@ export function LawyerCard({
           </div>
 
           <div className="flex items-center gap-3">
-            {requestHref ? (
+            {unavailable ? (
+              <span className="flex min-h-[44px] flex-1 items-center justify-center rounded-[10px] bg-[#F1F5F9] px-5 text-sm font-semibold text-[#475569]">
+                Agenda llena · no acepta casos nuevos
+              </span>
+            ) : requestHref ? (
               <Link to={requestHref} className="flex-1">
                 <Button variant="primary" className="w-full">
                   Solicitar asesoría
@@ -109,7 +116,7 @@ export function LawyerCard({
         </>
       )}
 
-      {compact && requestHref && (
+      {compact && requestHref && !unavailable && (
         <Link to={requestHref} className="text-sm font-semibold text-link hover:underline">
           Solicitar asesoría →
         </Link>

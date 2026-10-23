@@ -11,6 +11,7 @@ import {
   Users,
   Inbox,
   ShieldCheck,
+  UserCircle,
   LogOut,
 } from 'lucide-react';
 import { Logo } from '../ui/Logo';
@@ -130,7 +131,7 @@ export function Sidebar({ role }: { role: Role }) {
         ) : (
           <>
             <SidebarSection title="Apps">
-              <SidebarLink to="/directorio" icon={<Users className="h-4 w-4" />} label="Mi perfil público" />
+              <SidebarLink to="/abogado/perfil" icon={<UserCircle className="h-4 w-4" />} label="Mi perfil público" />
             </SidebarSection>
             <SidebarSection title="Clientas">
               {clientRoster.map((c) => (

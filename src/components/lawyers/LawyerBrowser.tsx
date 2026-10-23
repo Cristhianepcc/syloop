@@ -5,7 +5,7 @@ import { Select } from '../ui/Select';
 import { Button } from '../ui/Button';
 import { Modal } from '../ui/Modal';
 import { LawyerCard } from '../cards/LawyerCard';
-import { lawyers } from '../../data/lawyers';
+import { applyProfile, lawyers, MY_LAWYER_ID } from '../../data/lawyers';
 import { useAppStore } from '../../store/useAppStore';
 import type { Modalidad } from '../../types';
 
@@ -25,9 +25,21 @@ export function LawyerBrowser({ mode }: LawyerBrowserProps) {
   const [minRating, setMinRating] = useState(false);
   const [compareOpen, setCompareOpen] = useState(false);
 
-  const specialties = useMemo(() => Array.from(new Set(lawyers.flatMap((l) => l.specialties))), []);
+  const lawyerProfile = useAppStore((s) => s.lawyerProfile);
 
-  const filtered = lawyers.filter((l) => {
+  // The signed-in lawyer edits their own listing from /abogado/perfil, so the marketplace
+  // reads the seed data with those edits applied — and drops them when they unlist.
+  const listed = useMemo(
+    () =>
+      lawyers
+        .filter((l) => l.id !== MY_LAWYER_ID || lawyerProfile.listed)
+        .map((l) => applyProfile(l, lawyerProfile)),
+    [lawyerProfile]
+  );
+
+  const specialties = useMemo(() => Array.from(new Set(listed.flatMap((l) => l.specialties))), [listed]);
+
+  const filtered = listed.filter((l) => {
     const matchesSpecialty = specialty === 'all' || l.specialties.includes(specialty);
     const matchesModalidad = modalidad === 'all' || l.modalidad === modalidad || l.modalidad === 'Ambas';
     const matchesPrice = l.pricePerHito <= maxPrice;
@@ -35,7 +47,7 @@ export function LawyerBrowser({ mode }: LawyerBrowserProps) {
     return matchesSpecialty && matchesModalidad && matchesPrice && matchesRating;
   });
 
-  const comparedLawyers = lawyers.filter((l) => compareIds.includes(l.id));
+  const comparedLawyers = listed.filter((l) => compareIds.includes(l.id));
 
   return (
     <div className="flex flex-col gap-6 pb-20">
@@ -94,6 +106,7 @@ export function LawyerBrowser({ mode }: LawyerBrowserProps) {
             requested={mode === 'mother' ? requestedIds.includes(l.id) : false}
             onToggleRequest={mode === 'mother' ? toggleRequest : undefined}
             requestHref={mode === 'public' ? '/ingresar' : undefined}
+            unavailable={l.id === MY_LAWYER_ID && !lawyerProfile.acceptingClients}
           />
         ))}
         {filtered.length === 0 && (

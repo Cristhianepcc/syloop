@@ -182,3 +182,15 @@ export interface SubscriptionPlan {
   price: number;
   features: string[];
 }
+
+export interface LawyerProfileDraft {
+  bio: string;
+  district: District;
+  modalidad: Modalidad;
+  specialties: string[];
+  languages: string[];
+  pricePerHito: number;
+  responseHours: number;
+  listed: boolean;
+  acceptingClients: boolean;
+}

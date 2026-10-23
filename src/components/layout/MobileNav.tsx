@@ -10,6 +10,7 @@ import {
   Inbox,
   ShieldCheck,
   Menu,
+  UserCircle,
   X,
   LogOut,
 } from 'lucide-react';
@@ -48,7 +49,7 @@ export function MobileNav({ role }: { role: Role }) {
     { label: 'Mando', to: '/abogado', icon: <LayoutDashboard className="h-5 w-5" /> },
     { label: 'Adquisición', to: '/abogado/adquisicion', icon: <Inbox className="h-5 w-5" />, badge: newLeadsCount },
     { label: 'Validación', to: '/abogado/validacion', icon: <ShieldCheck className="h-5 w-5" />, badge: pendingValidationCount },
-    { label: 'Abogados', to: '/directorio', icon: <Users className="h-5 w-5" /> },
+    { label: 'Mi perfil', to: '/abogado/perfil', icon: <UserCircle className="h-5 w-5" /> },
   ];
   const lawyerMore: Item[] = [];
 
