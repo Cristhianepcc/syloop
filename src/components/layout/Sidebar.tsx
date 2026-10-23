@@ -49,6 +49,7 @@ export function Sidebar({ role }: { role: Role }) {
     { label: 'Centro de mando', to: '/abogado', icon: <LayoutDashboard className="h-[18px] w-[18px]" /> },
     { label: 'Adquisición', to: '/abogado/adquisicion', icon: <Inbox className="h-[18px] w-[18px]" />, badge: newLeadsCount },
     { label: 'Validación IA', to: '/abogado/validacion', icon: <ShieldCheck className="h-[18px] w-[18px]" />, badge: pendingValidationCount },
+    { label: 'Asistente IA', to: '/abogado/asistente', icon: <Sparkles className="h-[18px] w-[18px]" /> },
   ];
 
   const nav = role === 'madre' ? motherNav : lawyerNav;
@@ -133,7 +134,7 @@ export function Sidebar({ role }: { role: Role }) {
             </SidebarSection>
             <SidebarSection title="Clientas">
               {clientRoster.map((c) => (
-                <SidebarLink key={c.id} to="/abogado" icon={<Users className="h-4 w-4" />} label={c.clientName} />
+                <SidebarLink key={c.id} to={`/abogado/clienta/${c.id}`} icon={<Users className="h-4 w-4" />} label={c.clientName} />
               ))}
             </SidebarSection>
           </>
@@ -175,7 +176,10 @@ function SidebarSection({ title, children }: { title: string; children: ReactNod
 
 function SidebarLink({ to, icon, label }: { to: string; icon: ReactNode; label: string }) {
   const location = useLocation();
-  const isActive = location.pathname.startsWith(to);
+  const [toPath, toQuery] = to.split('?');
+  const isActive = toQuery
+    ? location.pathname === toPath && location.search === `?${toQuery}`
+    : location.pathname.startsWith(toPath) && !location.search;
 
   return (
     <Link

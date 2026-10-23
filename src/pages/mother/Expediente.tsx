@@ -1,4 +1,4 @@
-import { DragEvent, useMemo, useState } from 'react';
+import { DragEvent, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Search, UploadCloud, FileText, CheckCircle2, Clock } from 'lucide-react';
 import { Card, CardBlock, CardTitle } from '../../components/ui/Card';
@@ -13,12 +13,17 @@ export function Expediente() {
   const documents = useAppStore((s) => s.documents);
   const addDocument = useAppStore((s) => s.addDocument);
   const [searchParams] = useSearchParams();
+  const docParam = searchParams.get('doc');
 
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState<DocCategory | null>(null);
-  const [selectedId, setSelectedId] = useState(searchParams.get('doc') ?? documents[0]?.id);
+  const [selectedId, setSelectedId] = useState(docParam ?? documents[0]?.id);
   const [dragging, setDragging] = useState(false);
   const [uploading, setUploading] = useState(false);
+
+  useEffect(() => {
+    if (docParam) setSelectedId(docParam);
+  }, [docParam]);
 
   const filtered = useMemo(() => {
     return documents.filter((d) => {

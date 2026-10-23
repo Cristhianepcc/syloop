@@ -14,6 +14,8 @@ import { Marketplace } from './pages/mother/Marketplace';
 import { CommandCenter } from './pages/lawyer/CommandCenter';
 import { Leads } from './pages/lawyer/Leads';
 import { Validation } from './pages/lawyer/Validation';
+import { Asistente as LawyerAsistente } from './pages/lawyer/Asistente';
+import { ClientDetail } from './pages/lawyer/ClientDetail';
 
 export default function App() {
   return (
@@ -34,6 +36,8 @@ export default function App() {
         <Route path="/abogado" element={<AppLayout role="abogado"><CommandCenter /></AppLayout>} />
         <Route path="/abogado/adquisicion" element={<AppLayout role="abogado"><Leads /></AppLayout>} />
         <Route path="/abogado/validacion" element={<AppLayout role="abogado"><Validation /></AppLayout>} />
+        <Route path="/abogado/asistente" element={<AppLayout role="abogado"><LawyerAsistente /></AppLayout>} />
+        <Route path="/abogado/clienta/:id" element={<AppLayout role="abogado"><ClientDetail /></AppLayout>} />
 
         <Route path="*" element={<PublicLayout><NotFound /></PublicLayout>} />
       </Routes>

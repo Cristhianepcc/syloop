@@ -31,6 +31,9 @@ interface AppState {
   chatMessages: ChatMessage[];
   addChatMessage: (msg: ChatMessage) => void;
 
+  lawyerChatMessages: ChatMessage[];
+  addLawyerChatMessage: (msg: ChatMessage) => void;
+
   compareIds: string[];
   toggleCompare: (id: string) => void;
   requestedIds: string[];
@@ -58,6 +61,7 @@ const initialPersistedState = {
   documents: initialDocuments,
   bankImported: false,
   chatMessages: [] as ChatMessage[],
+  lawyerChatMessages: [] as ChatMessage[],
   compareIds: [] as string[],
   requestedIds: [] as string[],
   leads: initialLeads,
@@ -88,6 +92,8 @@ export const useAppStore = create<AppState>()(
       importBankStatement: () => set({ bankImported: true }),
 
       addChatMessage: (msg) => set((s) => ({ chatMessages: [...s.chatMessages, msg] })),
+
+      addLawyerChatMessage: (msg) => set((s) => ({ lawyerChatMessages: [...s.lawyerChatMessages, msg] })),
 
       toggleCompare: (id) =>
         set((s) => {

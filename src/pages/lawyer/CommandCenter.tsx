@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { CalendarClock, Users2, Milestone, Crown, CheckCircle2, AlertTriangle, Video } from 'lucide-react';
 import { Card, CardBlock, CardTitle } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
@@ -29,9 +30,9 @@ const milestoneStyles: Record<MilestoneStatus, { label: string; className: strin
 };
 
 export function CommandCenter() {
+  const navigate = useNavigate();
   const [showPeers, setShowPeers] = useState(true);
   const [range, setRange] = useState<'6m' | '2026'>('6m');
-  const [notice, setNotice] = useState('');
 
   const custody = range === '6m' ? custodyByMonth : custodyFullYear2026;
   const inCustody = custodyByMonth[custodyByMonth.length - 1].value;
@@ -54,18 +55,11 @@ export function CommandCenter() {
           <span className="rounded-full bg-tint px-3.5 py-1.5 text-sm font-semibold text-brand-ink">
             En custodia: S/ {inCustody.toLocaleString('es-PE')}
           </span>
-          <Button
-            variant="primary"
-            onClick={() => {
-              setNotice('El asistente para abogados estará disponible pronto.');
-              setTimeout(() => setNotice(''), 2500);
-            }}
-          >
+          <Button variant="primary" onClick={() => navigate('/abogado/asistente')}>
             Preguntar a Syloop
           </Button>
         </div>
       </header>
-      {notice && <p className="text-sm font-medium text-brand-ink">{notice}</p>}
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>
@@ -125,11 +119,16 @@ export function CommandCenter() {
           <CardTitle>Clientas más activas</CardTitle>
           <ul className="mt-4 flex flex-col gap-2">
             {activeCases.slice(0, 5).map((c) => (
-              <li key={c.id} className="flex items-center justify-between gap-3 rounded-block bg-canvas px-3 py-2.5 text-sm">
-                <span className="flex items-center gap-2 font-medium text-ink">
-                  <Users2 className="h-4 w-4 text-brand" /> {c.clientName}
-                </span>
-                <span className="text-xs text-[#475569]">{c.stage}</span>
+              <li key={c.id}>
+                <Link
+                  to={`/abogado/clienta/${c.id}`}
+                  className="flex items-center justify-between gap-3 rounded-block bg-canvas px-3 py-2.5 text-sm hover:bg-tint-soft"
+                >
+                  <span className="flex items-center gap-2 font-medium text-ink">
+                    <Users2 className="h-4 w-4 text-brand" /> {c.clientName}
+                  </span>
+                  <span className="text-xs text-[#475569]">{c.stage}</span>
+                </Link>
               </li>
             ))}
           </ul>
